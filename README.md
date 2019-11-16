@@ -13,5 +13,5 @@
 
 https://github.com/NeftXx/stragram-off
 
-[tests]: https://img.shields.io/travis/NeftXx/geekstragram
+[tests]: https://travis-ci.com/NeftXx/geekstragram.svg?branch=master
 [tests-url]: https://travis-ci.com/NeftXx/geekstragram
