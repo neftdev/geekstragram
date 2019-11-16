@@ -1,5 +1,11 @@
 dist: bionic
+
 language: php
+
+branches:
+  only:
+    - master
+
 php:
   - 7.2
   - 7.3
