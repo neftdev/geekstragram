@@ -15,8 +15,8 @@ class SearchController extends Controller
     public function search(Request $request)
     {   
         
-        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        $out->writeln($request);
+        //$out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        //$out->writeln($request);
 
         $validator = Validator::make($request->all(), [
             'hashtag' => 'required',
@@ -37,7 +37,7 @@ class SearchController extends Controller
         ->orderby('created_at','desc')
         ->get();
 
-        $out->writeln("Hello from Terminal");
+        //$out->writeln("Hello from Terminal");
         return  $photos;
     }
 
