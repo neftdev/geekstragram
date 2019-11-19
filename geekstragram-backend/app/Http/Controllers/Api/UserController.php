@@ -6,6 +6,7 @@ use Validator;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -19,10 +20,11 @@ class UserController extends Controller
         // Numero (0 - 9)
         // No alfanumérico (por ejemplo:!, $, # O%)
         // Caracteres Unicode
+        // 'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/',
         $validator = Validator::make($request->all(), [
-            'user_name' => 'required',
+            'user_name' => 'required|unique:users,user_name',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/',
+            'password' => 'required|min:6',
             'confirm_password' => 'required|same:password',
         ]);
 
@@ -33,6 +35,28 @@ class UserController extends Controller
         $data = $validator->validate();
         $data['password'] = bcrypt($data['password']);
         $user = User::create($data);
-        return response()->json(['message' => 'Usuario creado con exito'], $this->codeSuccess);
+        return response()->json([
+            'message' => 'Usuario creado con exito',
+            'email' => $user->email
+        ], $this->codeSuccess);
     }
+
+    public function login(Request $request) {
+        $request->validate([
+            'email'       => 'required|string|email',
+            'password'    => 'required|string'
+        ]);
+
+        $credentials = request(['email', 'password']);
+        if (!Auth::attempt($credentials)) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+        $user = $request->user();
+        return response()->json([
+            'email' => $user->email
+        ]);
+    }
+
 }
